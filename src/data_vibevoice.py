@@ -12,17 +12,9 @@ try:
 except Exception:  # pragma: no cover
     librosa = None  # Fallback: user must install librosa when using local audio paths
 
-try:
-    import resampy  # type: ignore
-except Exception:  # pragma: no cover
-    resampy = None
-
-
 def _resample_if_needed(wav: np.ndarray, orig_sr: int, target_sr: int) -> np.ndarray:
     if orig_sr == target_sr:
         return wav.astype(np.float32, copy=False)
-    if resampy is not None:
-        return resampy.resample(wav.astype(np.float32), orig_sr, target_sr)
     if librosa is not None:
         return librosa.resample(y=wav.astype(np.float32), orig_sr=orig_sr, target_sr=target_sr)
     warnings.warn(
@@ -444,3 +436,4 @@ class VibeVoiceCollator:
             "acoustic_loss_mask": acoustic_loss_mask_tensor,
             "speeches_loss_input": speeches_loss_input_tensor,
         }
+
